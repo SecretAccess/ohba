@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大場会 | INTERACTIVE EXPERIENCE</title>
+    <title>大場会 | 石巻市の経営者団体</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* リセットとベースの設定 */
         *, *::before, *::after {
@@ -20,761 +18,747 @@
         
         :root {
             --primary: #FF8C00;
+            --primary-light: #FFA333;
+            --primary-dark: #E67300;
             --secondary: #FFEB99;
-            --dark: #222;
-            --light: #fff;
-            --gray: #f5f5f5;
-            --highlight: #FF5722;
-            --text: #333;
-            
-            --transition-slow: 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-            --transition-medium: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            --transition-fast: 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+            --accent: #FF5722;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background: #FFF9F2;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+            --shadow-strong: 0 8px 20px rgba(255, 140, 0, 0.25);
             
             --font-heading: 'Noto Sans JP', sans-serif;
             --font-body: 'Noto Sans JP', sans-serif;
             
-            --glow: 0 0 10px rgba(255, 140, 0, 0.5), 0 0 20px rgba(255, 140, 0, 0.3), 0 0 30px rgba(255, 140, 0, 0.1);
+            --radius-small: 8px;
+            --radius-medium: 12px;
+            --radius-large: 20px;
+            
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.5s ease;
+            
+            --section-padding: 60px 20px;
         }
         
-        html, body {
-            font-family: var(--font-body);
-            background-color: var(--dark);
-            color: var(--light);
-            overflow-x: hidden;
-            height: 100%;
+        @media (min-width: 768px) {
+            :root {
+                --section-padding: 80px 30px;
+            }
+        }
+        
+        html {
+            font-size: 16px;
             scroll-behavior: smooth;
         }
         
         body {
-            cursor: none;
+            font-family: var(--font-body);
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 60px; /* ヘッダーの高さ分のパディング */
         }
         
-        /* カスタムカーソル */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            position: fixed;
-            pointer-events: none;
-            mix-blend-mode: difference;
-            z-index: 9999;
-            transition: transform 0.2s ease;
+        img {
+            max-width: 100%;
+            height: auto;
         }
         
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--secondary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.5;
-            transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: color var(--transition-fast);
         }
         
-        .expand {
-            transform: scale(2);
+        a:hover {
+            color: var(--primary-dark);
         }
         
-        /* ローディングアニメーション */
-        .loader {
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+        
+        /* セクション共通 */
+        .section {
+            padding: var(--section-padding);
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+        
+        .section-description {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* アニメーション */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ヘッダー */
+        .header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
+            height: 60px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+        }
+        
+        .header.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .header.scrolled {
+            box-shadow: var(--shadow-strong);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             height: 100%;
-            background-color: var(--dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1s ease-out, visibility 1s ease-out;
+            padding: 0 20px;
         }
         
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .loader-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .loader-logo {
-            font-size: 3rem;
+        .logo {
+            font-size: 1.5rem;
             font-weight: 900;
             color: var(--primary);
-            margin-bottom: 1rem;
+            margin: 0;
+        }
+        
+        .logo a {
+            color: inherit;
+        }
+        
+        /* ナビゲーション */
+        .nav-toggle {
+            display: block;
+            width: 28px;
+            height: 28px;
             position: relative;
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
-        }
-        
-        .loader-logo::before {
-            content: "大場会";
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: var(--secondary);
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-            animation: glitch 1s infinite alternate-reverse;
-        }
-        
-        .loader-logo::after {
-            content: "大場会";
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: var(--highlight);
-            clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
-            animation: glitch 0.7s infinite alternate;
-        }
-        
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
-            }
-            20% {
-                transform: translate(-2px, 2px);
-            }
-            40% {
-                transform: translate(-2px, -2px);
-            }
-            60% {
-                transform: translate(2px, 2px);
-            }
-            80% {
-                transform: translate(2px, -2px);
-            }
-            100% {
-                transform: translate(0);
-            }
-        }
-        
-        .progress-bar {
-            width: 200px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        /* WebGL背景 */
-        #webgl-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        /* ナビゲーションとヘッダー */
-        .nav-trigger {
-            position: fixed;
-            top: 40px;
-            right: 40px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
             cursor: pointer;
-            box-shadow: var(--glow);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            z-index: 1001;
+            background: none;
+            border: none;
         }
         
-        .nav-trigger:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.7), 0 0 30px rgba(255, 140, 0, 0.5), 0 0 45px rgba(255, 140, 0, 0.3);
-        }
-        
-        .nav-trigger span {
-            width: 20px;
-            height: 2px;
-            background-color: var(--light);
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-trigger span::before,
-        .nav-trigger span::after {
-            content: '';
+        .nav-toggle span {
+            display: block;
             position: absolute;
-            width: 20px;
-            height: 2px;
-            background-color: var(--light);
-            transition: all 0.3s ease;
+            height: 3px;
+            width: 100%;
+            background: var(--primary);
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+            border-radius: 3px;
         }
         
-        .nav-trigger span::before {
-            transform: translateY(-6px);
+        .nav-toggle span:nth-child(1) {
+            top: 6px;
         }
         
-        .nav-trigger span::after {
-            transform: translateY(6px);
+        .nav-toggle span:nth-child(2) {
+            top: 16px;
         }
         
-        .nav-trigger.active span {
-            background-color: transparent;
+        .nav-toggle span:nth-child(3) {
+            top: 26px;
         }
         
-        .nav-trigger.active span::before {
-            transform: rotate(45deg);
+        .nav-toggle.active span:nth-child(1) {
+            top: 16px;
+            transform: rotate(135deg);
         }
         
-        .nav-trigger.active span::after {
-            transform: rotate(-45deg);
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
         }
         
-        .navigation {
+        .nav-toggle.active span:nth-child(3) {
+            top: 16px;
+            transform: rotate(-135deg);
+        }
+        
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 70%;
+            max-width: 320px;
+            height: 100vh;
+            background-color: var(--white);
+            padding: 80px 30px 30px;
+            transform: translateX(100%);
+            transition: transform var(--transition-medium);
+            z-index: 1000;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .nav-menu.active {
+            transform: translateX(0);
+        }
+        
+        .nav-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            clip-path: circle(0% at calc(100% - 65px) 65px);
-            transition: clip-path 0.7s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-medium), visibility var(--transition-medium);
         }
         
-        .navigation.open {
-            clip-path: circle(150% at calc(100% - 65px) 65px);
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
         
         .nav-links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
         
-        .nav-link {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--light);
-            text-decoration: none;
-            margin: 1rem 0;
+        .nav-links li {
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-links li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .nav-links a {
+            display: block;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            font-weight: 500;
             position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.5s ease, transform 0.5s ease, color 0.3s ease;
+            padding: 5px 0;
         }
         
-        .navigation.open .nav-link {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.3s;
-        }
-        
-        .navigation.open .nav-link:nth-child(2) {
-            transition-delay: 0.4s;
-        }
-        
-        .navigation.open .nav-link:nth-child(3) {
-            transition-delay: 0.5s;
-        }
-        
-        .navigation.open .nav-link:nth-child(4) {
-            transition-delay: 0.6s;
-        }
-        
-        .navigation.open .nav-link:nth-child(5) {
-            transition-delay: 0.7s;
-        }
-        
-        .navigation.open .nav-link:nth-child(6) {
-            transition-delay: 0.8s;
-        }
-        
-        .nav-link:hover {
+        .nav-links a:hover {
             color: var(--primary);
         }
         
-        .nav-link::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: 0;
             left: 0;
+            bottom: 0;
             width: 0;
             height: 2px;
             background-color: var(--primary);
-            transition: width 0.3s ease;
+            transition: width var(--transition-fast);
         }
         
-        .nav-link:hover::after {
+        .nav-links a:hover::after {
             width: 100%;
         }
         
-        /* メインセクション */
-        .section {
-            min-height: 100vh;
-            padding: 5rem 10%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+        .nav-cta {
+            margin-top: 2rem;
         }
         
-        .section-content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 1200px;
+        /* デスクトップナビゲーション */
+        @media (min-width: 992px) {
+            .nav-toggle {
+                display: none;
+            }
+            
+            .nav-menu {
+                position: static;
+                width: auto;
+                height: auto;
+                padding: 0;
+                transform: none;
+                background: none;
+                box-shadow: none;
+                overflow: visible;
+            }
+            
+            .nav-links {
+                display: flex;
+                align-items: center;
+            }
+            
+            .nav-links li {
+                margin: 0 0 0 1.5rem;
+            }
+            
+            .nav-overlay {
+                display: none;
+            }
+            
+            .nav-cta {
+                margin-top: 0;
+                margin-left: 2rem;
+            }
         }
         
         /* ヒーローセクション */
         .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 4rem 20px 6rem;
             text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--primary-light));
             position: relative;
-            padding: 0;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
         }
         
         .hero-content {
             position: relative;
             z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .hero-title {
-            font-size: 6rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            opacity: 0;
-            transform: translateY(30px);
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: var(--glow);
+            font-size: 2.5rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
         .hero-subtitle {
-            font-size: 1.5rem;
-            font-weight: 300;
+            font-size: 1.1rem;
+            color: var(--white);
             margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
+            font-weight: 400;
         }
         
-        .hero-cta {
-            margin-top: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        
+        /* ボタン */
         .btn {
             display: inline-block;
-            padding: 1rem 2rem;
             background-color: var(--primary);
-            color: var(--light);
-            text-decoration: none;
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: var(--radius-medium);
             font-weight: 700;
-            border-radius: 50px;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: color 0.3s ease;
-            box-shadow: var(--glow);
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            background-color: var(--secondary);
-            z-index: -1;
-            transition: width 0.3s ease;
+            text-align: center;
+            transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+            box-shadow: var(--shadow);
+            border: none;
+            cursor: pointer;
         }
         
         .btn:hover {
-            color: var(--dark);
+            background-color: var(--primary-dark);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-strong);
         }
         
-        .btn:hover::before {
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary);
+            color: var(--primary-dark);
+        }
+        
+        .btn-large {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-full {
             width: 100%;
         }
         
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            color: var(--light);
-            font-size: 1.5rem;
-            opacity: 0;
+        /* 特徴セクション */
+        .features {
+            margin-top: 2rem;
         }
         
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0) translateX(-50%);
-            }
-            40% {
-                transform: translateY(-20px) translateX(-50%);
-            }
-            60% {
-                transform: translateY(-10px) translateX(-50%);
-            }
-        }
-        
-        /* アバウトセクション */
-        .about {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .about-item {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 2rem;
+        .feature-card {
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            transform: translateY(50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease, box-shadow 0.5s ease;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
         }
         
-        .about-item:hover {
-            box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
         }
         
-        .about-item::before {
+        .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
         }
         
-        .about-item h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
             color: var(--primary);
         }
         
-        .about-item p {
-            line-height: 1.6;
+        @media (min-width: 768px) {
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 0;
+            }
         }
         
-        .stat-container {
-            display: flex;
-            justify-content: space-around;
+        /* 統計セクション */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
             margin: 3rem 0;
         }
         
         .stat-item {
             text-align: center;
-            opacity: 0;
-            transform: translateY(30px);
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
+            box-shadow: var(--shadow);
         }
         
         .stat-number {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
             color: var(--primary);
-            position: relative;
-            display: inline-block;
-        }
-        
-        .stat-number::after {
-            content: '+';
-            position: absolute;
-            top: 0;
-            right: -15px;
-            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            line-height: 1;
         }
         
         .stat-label {
-            font-size: 1rem;
-            color: var(--light);
+            font-size: 0.9rem;
+            color: var(--text-light);
         }
         
         /* アクティビティセクション */
-        .activities {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        
-        .activities-slider {
-            width: 100%;
-            height: 500px;
+        .activity-slider {
             position: relative;
-            overflow: hidden;
+            margin-top: 2rem;
         }
         
-        .activities-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .activity-slide {
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
             padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            display: none;
         }
         
-        .activities-slide.active {
-            opacity: 1;
+        .activity-slide.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
         }
         
-        .activities-slide h3 {
-            font-size: 2.5rem;
-            font-weight: 900;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .activity-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .activity-title {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--primary);
         }
         
-        .activities-slide p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 2rem;
+        .activity-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
         }
         
-        .activities-nav {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+        .activity-nav {
             display: flex;
-            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
         }
         
-        .activities-nav-item {
-            width: 15px;
-            height: 15px;
+        .activity-nav-item {
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: var(--secondary);
+            margin: 0 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
         }
         
-        .activities-nav-item.active {
+        .activity-nav-item.active {
             background-color: var(--primary);
+            transform: scale(1.3);
         }
         
         /* イベントセクション */
-        .events {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        
         .events-timeline {
             position: relative;
-            padding: 2rem 0;
+            margin-top: 3rem;
         }
         
-        .events-timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background-color: var(--primary);
-        }
-        
-        .event-item {
-            display: flex;
-            margin-bottom: 4rem;
+        .event-card {
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
             position: relative;
-            opacity: 0;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
         }
         
-        .event-item:nth-child(odd) {
-            justify-content: flex-start;
-            transform: translateX(-50px);
-        }
-        
-        .event-item:nth-child(even) {
-            justify-content: flex-end;
-            transform: translateX(50px);
-        }
-        
-        .event-content {
-            width: calc(50% - 50px);
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 2rem;
-            position: relative;
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
         }
         
         .event-date {
+            display: inline-block;
             background-color: var(--primary);
-            color: var(--light);
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            position: absolute;
-            top: -15px;
-        }
-        
-        .event-item:nth-child(odd) .event-date {
-            right: 10px;
-        }
-        
-        .event-item:nth-child(even) .event-date {
-            left: 10px;
+            color: var(--white);
+            padding: 5px 12px;
+            border-radius: var(--radius-small);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
         
         .event-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            margin-top: 1rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
         }
         
-        .event-description {
-            font-size: 1rem;
-            line-height: 1.6;
+        .event-details {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
         
-        .event-item::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            width: 20px;
-            height: 20px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            box-shadow: var(--glow);
-        }
-        
-        .event-item:nth-child(odd)::after {
-            right: calc(50% - 10px);
-        }
-        
-        .event-item:nth-child(even)::after {
-            left: calc(50% - 10px);
+        @media (min-width: 768px) {
+            .events-timeline {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .event-card {
+                margin-bottom: 0;
+            }
         }
         
         /* メンバーセクション */
-        .members {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        
         .members-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 2rem;
-            perspective: 1000px;
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
         
         .member-card {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 2rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transform-style: preserve-3d;
-            transform: rotateY(30deg) translateZ(0);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
-            opacity: 0;
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
         }
         
         .member-card:hover {
-            transform: rotateY(0) translateZ(50px);
-            box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+        }
+        
+        .member-header {
+            background-color: var(--primary-light);
+            padding: 2rem 1rem;
+            text-align: center;
         }
         
         .member-avatar {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             background-color: var(--primary);
             border-radius: 50%;
-            margin: 0 auto 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
-            color: var(--light);
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--white);
+        }
+        
+        .member-info {
+            padding: 1.5rem;
         }
         
         .member-name {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            text-align: center;
             margin-bottom: 0.5rem;
         }
         
         .member-position {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--primary);
+            text-align: center;
             margin-bottom: 1rem;
+            font-weight: 500;
         }
         
-        .member-description {
-            font-size: 0.9rem;
-            line-height: 1.6;
+        .member-bio {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
         }
         
         /* 入会セクション */
         .join {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: var(--primary-light);
+            color: var(--white);
+        }
+        
+        .join .section-title {
+            color: var(--white);
+        }
+        
+        .join .section-title::after {
+            background: var(--white);
         }
         
         .join-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            background-color: var(--white);
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+            box-shadow: var(--shadow-strong);
         }
         
-        .join-info {
-            opacity: 0;
-            transform: translateX(-50px);
+        .benefits {
+            padding: 2rem;
+            border-bottom: 1px solid var(--secondary);
         }
         
-        .join-form {
-            opacity: 0;
-            transform: translateX(50px);
+        .benefits-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
         }
         
         .benefits-list {
             list-style: none;
-            margin: 2rem 0;
+            margin: 0;
+            padding: 0;
         }
         
         .benefits-list li {
             margin-bottom: 1rem;
-            position: relative;
             padding-left: 30px;
+            position: relative;
+        }
+        
+        .benefits-list li:last-child {
+            margin-bottom: 0;
         }
         
         .benefits-list li::before {
@@ -786,25 +770,47 @@
             font-weight: 700;
         }
         
+        .fees {
+            padding: 1.5rem 2rem;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .fee-item {
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .fee-item:last-child {
+            margin-right: 0;
+        }
+        
+        .fee-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.2rem;
+        }
+        
+        .fee-amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .join-form {
+            padding: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
         .form-group {
             margin-bottom: 1.5rem;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 5px;
-            color: var(--light);
-            font-family: var(--font-body);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
         }
         
         .form-label {
@@ -813,252 +819,265 @@
             font-weight: 500;
         }
         
-        /* お問い合わせセクション */
-        .contact {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-        
-        .contact-info {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        
-        .contact-map {
+        .form-control {
             width: 100%;
-            height: 300px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            opacity: 0;
-            transform: translateY(50px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2rem;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-small);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        @media (min-width: 768px) {
+            .join-form-wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+        
+        /* お問い合わせセクション */
+        .contact-info {
+            margin-bottom: 2rem;
         }
         
         .contact-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1.5rem;
         }
         
         .contact-icon {
             width: 40px;
             height: 40px;
-            background-color: var(--primary);
+            background-color: var(--primary-light);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-right: 1rem;
-            color: var(--light);
+            color: var(--white);
+            flex-shrink: 0;
         }
         
         .contact-text h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1rem;
             margin-bottom: 0.2rem;
+        }
+        
+        .contact-text p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        .map {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: var(--radius-medium);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .contact-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+            
+            .contact-info {
+                margin-bottom: 0;
+            }
         }
         
         /* フッター */
         .footer {
-            background-color: var(--dark);
-            padding: 3rem 10%;
-            text-align: center;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 4rem 20px 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
         }
         
         .footer-logo {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            color: var(--primary);
             margin-bottom: 1rem;
             display: inline-block;
+            color: var(--white);
         }
         
-        .footer-nav {
+        .footer-contact {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .footer-heading {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--white);
+        }
+        
+        .footer-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color var(--transition-fast);
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            margin: 2rem 0;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border-radius: 50%;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
         }
         
-        .footer-nav a {
-            color: var(--light);
-            text-decoration: none;
-            margin: 0 1rem;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-nav a:hover {
+        .social-link:hover {
+            background-color: var(--white);
             color: var(--primary);
+            transform: translateY(-3px);
         }
         
-        .footer-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
+        .copyright {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
         }
         
-        .footer-nav a:hover::after {
-            width: 100%;
-        }
-        
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-        
-        .social-icon {
+        /* スクロールトップボタン */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             width: 40px;
             height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--primary);
+            color: var(--white);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 0.5rem;
-            color: var(--light);
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-fast), visibility var(--transition-fast), background-color var(--transition-fast);
         }
         
-        .social-icon:hover {
-            background-color: var(--primary);
-            transform: translateY(-5px);
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
         
-        .copyright {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        /* レスポンシブ対応 */
-        @media (max-width: 991px) {
-            .hero-title {
-                font-size: 4rem;
-            }
-            
-            .contact-grid,
-            .join-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .event-content {
-                width: calc(100% - 50px);
-            }
-            
-            .events-timeline::before {
-                left: 25px;
-            }
-            
-            .event-item {
-                justify-content: flex-start;
-            }
-            
-            .event-item:nth-child(odd),
-            .event-item:nth-child(even) {
-                transform: translateX(0);
-            }
-            
-            .event-item:nth-child(odd)::after,
-            .event-item:nth-child(even)::after {
-                left: 15px;
-            }
-            
-            .event-item:nth-child(odd) .event-date,
-            .event-item:nth-child(even) .event-date {
-                left: 10px;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            
-            .about-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section {
-                padding: 3rem 5%;
-            }
-            
-            .nav-link {
-                font-size: 2rem;
-            }
+        .scroll-top:hover {
+            background-color: var(--primary-dark);
         }
     </style>
 </head>
 <body>
-    <!-- カスタムカーソル -->
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
-    
-    <!-- ローディングアニメーション -->
-    <div class="loader">
-        <div class="loader-content">
-            <div class="loader-logo">大場会</div>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo"><a href="#hero">大場会</a></h1>
+            
+            <button class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="#hero">ホーム</a></li>
+                    <li><a href="#about">大場会について</a></li>
+                    <li><a href="#activities">活動内容</a></li>
+                    <li><a href="#events">イベント</a></li>
+                    <li><a href="#members">会員情報</a></li>
+                    <li><a href="#join">入会案内</a></li>
+                    <li><a href="#contact">お問い合わせ</a></li>
+                </ul>
+                
+                <div class="nav-cta">
+                    <a href="#join" class="btn btn-full">今すぐ入会する</a>
+                </div>
+            </nav>
         </div>
-    </div>
+    </header>
     
-    <!-- WebGL背景 -->
-    <canvas id="webgl-background"></canvas>
-    
-    <!-- ナビゲーション -->
-    <div class="nav-trigger">
-        <span></span>
-    </div>
-    
-    <nav class="navigation">
-        <div class="nav-links">
-            <a href="#hero" class="nav-link">ホーム</a>
-            <a href="#about" class="nav-link">大場会について</a>
-            <a href="#activities" class="nav-link">活動内容</a>
-            <a href="#events" class="nav-link">イベント</a>
-            <a href="#members" class="nav-link">会員情報</a>
-            <a href="#join" class="nav-link">入会案内</a>
-            <a href="#contact" class="nav-link">お問い合わせ</a>
-        </div>
-    </nav>
+    <div class="nav-overlay"></div>
     
     <!-- ヒーローセクション -->
-    <section id="hero" class="section hero">
+    <section id="hero" class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">大場会</h1>
-            <p class="hero-subtitle">石巻市を拠点に、経営者の相互成長と地域社会の発展に貢献</p>
-            <div class="hero-cta">
-                <a href="#about" class="btn">詳しく見る</a>
+            <h1 class="hero-title fade-in">大場会</h1>
+            <p class="hero-subtitle fade-in">石巻市を拠点に、経営者の相互成長と地域社会の発展に貢献</p>
+            <div class="fade-in">
+                <a href="#about" class="btn btn-large">詳しく見る</a>
             </div>
-        </div>
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
         </div>
     </section>
     
     <!-- アバウトセクション -->
-    <section id="about" class="section about">
-        <div class="section-content">
-            <h2 class="section-title">大場会について</h2>
-            <p class="section-description">大場会は石巻市を拠点に活動する地域密着型の経営者団体です。会員同士の交流を通じて、経営者としての資質向上と地域社会の発展に貢献することを目指しています。</p>
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">大場会について</h2>
+            <p class="section-description fade-in">大場会は石巻市を拠点に活動する地域密着型の経営者団体です。会員同士の交流を通じて、経営者としての資質向上と地域社会の発展に貢献することを目指しています。</p>
             
-            <div class="stat-container">
+            <div class="stats fade-in">
                 <div class="stat-item">
                     <div class="stat-number" data-count="50">0</div>
                     <div class="stat-label">会員数</div>
@@ -1073,17 +1092,28 @@
                 </div>
             </div>
             
-            <div class="about-grid">
-                <div class="about-item">
-                    <h3>伝統と歴史</h3>
+            <div class="features">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="feature-title">伝統と歴史</h3>
                     <p>石巻市で長年にわたる伝統と歴史を大切にしながら、時代に合わせた活動を展開しています。地域に根差した活動を通じて、地元企業の発展と繁栄を支援しています。</p>
                 </div>
-                <div class="about-item">
-                    <h3>コミュニティの力</h3>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">コミュニティの力</h3>
                     <p>多様なバックグラウンドを持つメンバーが集まり、互いに支え合いながら成長しています。異業種交流を通じて新たなビジネスチャンスを創出し、会員企業の発展を促進します。</p>
                 </div>
-                <div class="about-item">
-                    <h3>未来への展望</h3>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="feature-title">未来への展望</h3>
                     <p>常に新しいアイデアや技術を取り入れ、未来を見据えた活動を行っています。石巻市の経済発展と地域活性化に貢献するため、革新的な取り組みを積極的に推進しています。</p>
                 </div>
             </div>
@@ -1091,106 +1121,151 @@
     </section>
     
     <!-- アクティビティセクション -->
-    <section id="activities" class="section activities">
-        <div class="section-content">
-            <h2 class="section-title">活動内容</h2>
-            <div class="activities-slider">
-                <div class="activities-slide active">
-                    <h3>定例朝会</h3>
-                    <p>毎月第2・第4火曜日の朝6:00から石巻グランドホテルにて開催。経営や人生に役立つ講話と会員同士の交流の場です。朝から活力をチャージし、1日を有意義にスタートします。</p>
+    <section id="activities" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">活動内容</h2>
+            <p class="section-description fade-in">大場会ではさまざまな活動を通して、会員の成長と地域社会への貢献を目指しています。</p>
+            
+            <div class="activity-slider fade-in">
+                <div class="activity-slide active">
+                    <div class="activity-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3 class="activity-title">定例朝会</h3>
+                    <p class="activity-description">毎月第2・第4火曜日の朝6:00から石巻グランドホテルにて開催。経営や人生に役立つ講話と会員同士の交流の場です。朝から活力をチャージし、1日を有意義にスタートします。</p>
                     <a href="#join" class="btn">参加してみる</a>
                 </div>
-                <div class="activities-slide">
-                    <h3>経営研修会</h3>
-                    <p>四半期ごとに開催される経営に関する研修会。専門家を招いての講演やワークショップを通じて、経営スキルの向上を図ります。会員のビジネス成長を強力にサポートします。</p>
+                
+                <div class="activity-slide">
+                    <div class="activity-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="activity-title">経営研修会</h3>
+                    <p class="activity-description">四半期ごとに開催される経営に関する研修会。専門家を招いての講演やワークショップを通じて、経営スキルの向上を図ります。会員のビジネス成長を強力にサポートします。</p>
                     <a href="#events" class="btn">イベント情報</a>
                 </div>
-                <div class="activities-slide">
-                    <h3>地域貢献活動</h3>
-                    <p>石巻市の発展に貢献するための様々な活動を実施。地域清掃、イベント協賛、子供向け職業体験など、地域社会との共生を大切にしています。</p>
+                
+                <div class="activity-slide">
+                    <div class="activity-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3 class="activity-title">地域貢献活動</h3>
+                    <p class="activity-description">石巻市の発展に貢献するための様々な活動を実施。地域清掃、イベント協賛、子供向け職業体験など、地域社会との共生を大切にしています。</p>
                     <a href="#contact" class="btn">お問い合わせ</a>
                 </div>
             </div>
-            <div class="activities-nav">
-                <div class="activities-nav-item active" data-slide="0"></div>
-                <div class="activities-nav-item" data-slide="1"></div>
-                <div class="activities-nav-item" data-slide="2"></div>
+            
+            <div class="activity-nav">
+                <div class="activity-nav-item active" data-slide="0"></div>
+                <div class="activity-nav-item" data-slide="1"></div>
+                <div class="activity-nav-item" data-slide="2"></div>
             </div>
         </div>
     </section>
     
     <!-- イベントセクション -->
-    <section id="events" class="section events">
-        <div class="section-content">
-            <h2 class="section-title">今後の予定</h2>
+    <section id="events" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">今後の予定</h2>
+            <p class="section-description fade-in">大場会では定期的にさまざまなイベントを開催しています。会員以外の方も参加できるイベントもございますので、ぜひご参加ください。</p>
+            
             <div class="events-timeline">
-                <div class="event-item">
-                    <div class="event-content">
-                        <div class="event-date">2025年4月15日</div>
-                        <h3 class="event-title">春季総会・特別講演会</h3>
-                        <p class="event-description">場所：石巻グランドホテル 大宴会場<br>時間：18:00～20:30<br>講師：大場正之 代表</p>
-                    </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">2025年4月15日</div>
+                    <h3 class="event-title">春季総会・特別講演会</h3>
+                    <p class="event-details">
+                        <strong>場所：</strong>石巻グランドホテル 大宴会場<br>
+                        <strong>時間：</strong>18:00～20:30<br>
+                        <strong>講師：</strong>大場正之 代表
+                    </p>
                 </div>
-                <div class="event-item">
-                    <div class="event-content">
-                        <div class="event-date">2025年5月10日</div>
-                        <h3 class="event-title">石巻港清掃ボランティア活動</h3>
-                        <p class="event-description">場所：石巻港周辺<br>時間：9:00～12:00<br>参加者募集中！環境美化にご協力ください。</p>
-                    </div>
+                
+                <div class="event-card fade-in">
+                    <div class="event-date">2025年5月10日</div>
+                    <h3 class="event-title">石巻港清掃ボランティア活動</h3>
+                    <p class="event-details">
+                        <strong>場所：</strong>石巻港周辺<br>
+                        <strong>時間：</strong>9:00～12:00<br>
+                        参加者募集中！環境美化にご協力ください。
+                    </p>
                 </div>
-                <div class="event-item">
-                    <div class="event-content">
-                        <div class="event-date">2025年6月20日</div>
-                        <h3 class="event-title">経営セミナー「DXで変わる中小企業の未来」</h3>
-                        <p class="event-description">場所：石巻市ビジネスサポートセンター<br>時間：14:00～16:00<br>講師：ITコンサルタント 山田太郎氏</p>
-                    </div>
+                
+                <div class="event-card fade-in">
+                    <div class="event-date">2025年6月20日</div>
+                    <h3 class="event-title">経営セミナー「DXで変わる中小企業の未来」</h3>
+                    <p class="event-details">
+                        <strong>場所：</strong>石巻市ビジネスサポートセンター<br>
+                        <strong>時間：</strong>14:00～16:00<br>
+                        <strong>講師：</strong>ITコンサルタント 山田太郎氏
+                    </p>
                 </div>
             </div>
         </div>
     </section>
     
     <!-- メンバーセクション -->
-    <section id="members" class="section members">
-        <div class="section-content">
-            <h2 class="section-title">会員情報</h2>
-            <p class="section-description">大場会は石巻市を中心に活動する様々な業種の経営者・事業者が集まる団体です。会員同士の交流を通じて、ビジネスの発展と地域社会への貢献を目指しています。</p>
+    <section id="members" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">会員情報</h2>
+            <p class="section-description fade-in">大場会は石巻市を中心に活動する様々な業種の経営者・事業者が集まる団体です。会員同士の交流を通じて、ビジネスの発展と地域社会への貢献を目指しています。</p>
             
             <div class="members-grid">
-                <div class="member-card">
-                    <div class="member-avatar">大</div>
-                    <h3 class="member-name">大場 正之</h3>
-                    <div class="member-position">代表</div>
-                    <p class="member-description">創業以来、大場会を率いるリーダー。地域経済の活性化に尽力し、多くの経営者から信頼を得ている。</p>
+                <div class="member-card fade-in">
+                    <div class="member-header">
+                        <div class="member-avatar">大</div>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">大場 正之</h3>
+                        <div class="member-position">代表</div>
+                        <p class="member-bio">創業以来、大場会を率いるリーダー。地域経済の活性化に尽力し、多くの経営者から信頼を得ている。</p>
+                    </div>
                 </div>
-                <div class="member-card">
-                    <div class="member-avatar">佐</div>
-                    <h3 class="member-name">佐藤 健太</h3>
-                    <div class="member-position">副代表</div>
-                    <p class="member-description">ITビジネスに精通し、デジタル化の推進役として活躍。新しい視点で組織に活力を与えている。</p>
+                
+                <div class="member-card fade-in">
+                    <div class="member-header">
+                        <div class="member-avatar">佐</div>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">佐藤 健太</h3>
+                        <div class="member-position">副代表</div>
+                        <p class="member-bio">ITビジネスに精通し、デジタル化の推進役として活躍。新しい視点で組織に活力を与えている。</p>
+                    </div>
                 </div>
-                <div class="member-card">
-                    <div class="member-avatar">高</div>
-                    <h3 class="member-name">高橋 美咲</h3>
-                    <div class="member-position">理事</div>
-                    <p class="member-description">女性経営者として地域の女性活躍推進に注力。多くの起業家のメンターとしても活動中。</p>
+                
+                <div class="member-card fade-in">
+                    <div class="member-header">
+                        <div class="member-avatar">高</div>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">高橋 美咲</h3>
+                        <div class="member-position">理事</div>
+                        <p class="member-bio">女性経営者として地域の女性活躍推進に注力。多くの起業家のメンターとしても活動中。</p>
+                    </div>
                 </div>
-                <div class="member-card">
-                    <div class="member-avatar">鈴</div>
-                    <h3 class="member-name">鈴木 誠</h3>
-                    <div class="member-position">委員長</div>
-                    <p class="member-description">地元の老舗企業の3代目。伝統を守りながらも革新的な経営手法を取り入れている。</p>
+                
+                <div class="member-card fade-in">
+                    <div class="member-header">
+                        <div class="member-avatar">鈴</div>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">鈴木 誠</h3>
+                        <div class="member-position">委員長</div>
+                        <p class="member-bio">地元の老舗企業の3代目。伝統を守りながらも革新的な経営手法を取り入れている。</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- 入会案内セクション -->
+    <!-- 入会セクション -->
     <section id="join" class="section join">
-        <div class="section-content">
-            <h2 class="section-title">入会のご案内</h2>
-            <div class="join-content">
-                <div class="join-info">
-                    <h3>会員特典</h3>
+        <div class="container">
+            <h2 class="section-title fade-in">入会のご案内</h2>
+            <p class="section-description fade-in">大場会では、共に学び、共に成長していただける新しい会員を募集しています。</p>
+            
+            <div class="join-content fade-in">
+                <div class="benefits">
+                    <h3 class="benefits-title">会員特典</h3>
                     <ul class="benefits-list">
                         <li>定例会への参加権</li>
                         <li>会員専用イベントへの参加</li>
@@ -1199,33 +1274,48 @@
                         <li>経営相談サービス</li>
                         <li>会員企業のPR支援</li>
                     </ul>
-                    <h3>入会条件</h3>
-                    <p>石巻市および周辺地域で事業を営む経営者の方。会の趣旨にご賛同いただける方であれば、業種や規模を問わず入会いただけます。</p>
-                    <div class="fee-info">
-                        <p><strong>入会金：</strong> 10,000円</p>
-                        <p><strong>年会費：</strong> 30,000円</p>
+                </div>
+                
+                <div class="fees">
+                    <div class="fee-item">
+                        <div class="fee-label">入会金</div>
+                        <div class="fee-amount">10,000円</div>
+                    </div>
+                    <div class="fee-item">
+                        <div class="fee-label">年会費</div>
+                        <div class="fee-amount">30,000円</div>
                     </div>
                 </div>
+                
                 <div class="join-form">
-                    <h3>入会お問い合わせ</h3>
-                    <form>
+                    <h3 class="form-title">入会お問い合わせ</h3>
+                    <form class="join-form-wrapper">
                         <div class="form-group">
-                            <label class="form-label">お名前</label>
-                            <input type="text" class="form-control" placeholder="例：大場 太郎">
+                            <label class="form-label" for="name">お名前</label>
+                            <input type="text" class="form-control" id="name" placeholder="例：大場 太郎">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">会社名</label>
-                            <input type="text" class="form-control" placeholder="例：株式会社大場">
+                            <label class="form-label" for="company">会社名</label>
+                            <input type="text" class="form-control" id="company" placeholder="例：株式会社大場">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">メールアドレス</label>
-                            <input type="email" class="form-control" placeholder="例：info@example.com">
+                            <label class="form-label" for="email">メールアドレス</label>
+                            <input type="email" class="form-control" id="email" placeholder="例：info@example.com">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">お問い合わせ内容</label>
-                            <textarea class="form-control" rows="5" placeholder="入会に関するお問い合わせやご質問をご記入ください"></textarea>
+                            <label class="form-label" for="phone">電話番号</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="例：090-1234-5678">
                         </div>
-                        <button type="submit" class="btn">送信する</button>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="message">お問い合わせ内容</label>
+                            <textarea class="form-control" id="message" placeholder="入会に関するお問い合わせやご質問をご記入ください"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-full">送信する</button>
                     </form>
                 </div>
             </div>
@@ -1233,11 +1323,13 @@
     </section>
     
     <!-- お問い合わせセクション -->
-    <section id="contact" class="section contact">
-        <div class="section-content">
-            <h2 class="section-title">お問い合わせ</h2>
-            <div class="contact-grid">
-                <div class="contact-info">
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">お問い合わせ</h2>
+            <p class="section-description fade-in">大場会に関するお問い合わせは、以下の連絡先またはお問い合わせフォームからお願いいたします。</p>
+            
+            <div class="contact-content">
+                <div class="contact-info fade-in">
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
@@ -1247,6 +1339,7 @@
                             <p>〒986-0865<br>石巻市新境町2-2-1</p>
                         </div>
                     </div>
+                    
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-phone"></i>
@@ -1256,6 +1349,7 @@
                             <p>0120-008-008（おおばおおば）</p>
                         </div>
                     </div>
+                    
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-envelope"></i>
@@ -1265,6 +1359,7 @@
                             <p>info@oba-kai.com</p>
                         </div>
                     </div>
+                    
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-clock"></i>
@@ -1274,30 +1369,36 @@
                             <p>平日 9:00～17:00</p>
                         </div>
                     </div>
-                    <div class="contact-map">
+                    
+                    <div class="map fade-in">
                         <p>※ 地図はここに表示されます</p>
                     </div>
                 </div>
-                <div class="join-form">
-                    <h3>お問い合わせフォーム</h3>
+                
+                <div class="fade-in">
+                    <h3 class="form-title">お問い合わせフォーム</h3>
                     <form>
                         <div class="form-group">
-                            <label class="form-label">お名前</label>
-                            <input type="text" class="form-control" placeholder="例：大場 太郎">
+                            <label class="form-label" for="contact-name">お名前</label>
+                            <input type="text" class="form-control" id="contact-name" placeholder="例：大場 太郎">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">メールアドレス</label>
-                            <input type="email" class="form-control" placeholder="例：info@example.com">
+                            <label class="form-label" for="contact-email">メールアドレス</label>
+                            <input type="email" class="form-control" id="contact-email" placeholder="例：info@example.com">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">件名</label>
-                            <input type="text" class="form-control" placeholder="例：イベントについての質問">
+                            <label class="form-label" for="contact-subject">件名</label>
+                            <input type="text" class="form-control" id="contact-subject" placeholder="例：イベントについての質問">
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label">お問い合わせ内容</label>
-                            <textarea class="form-control" rows="5" placeholder="お問い合わせ内容をご記入ください"></textarea>
+                            <label class="form-label" for="contact-message">お問い合わせ内容</label>
+                            <textarea class="form-control" id="contact-message" placeholder="お問い合わせ内容をご記入ください"></textarea>
                         </div>
-                        <button type="submit" class="btn">送信する</button>
+                        
+                        <button type="submit" class="btn btn-full">送信する</button>
                     </form>
                 </div>
             </div>
@@ -1306,228 +1407,167 @@
     
     <!-- フッター -->
     <footer class="footer">
-        <a href="#hero" class="footer-logo">大場会</a>
-        <div class="footer-nav">
-            <a href="#hero">ホーム</a>
-            <a href="#about">大場会について</a>
-            <a href="#activities">活動内容</a>
-            <a href="#events">イベント</a>
-            <a href="#members">会員情報</a>
-            <a href="#join">入会案内</a>
-            <a href="#contact">お問い合わせ</a>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <a href="#hero" class="footer-logo">大場会</a>
+                    <div class="footer-contact">
+                        〒986-0865<br>
+                        石巻市新境町2-2-1<br>
+                        TEL: 0120-008-008（おおばおおば）<br>
+                        受付時間: 平日 9:00～17:00
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">サイトマップ</h3>
+                    <ul class="footer-links">
+                        <li><a href="#hero">ホーム</a></li>
+                        <li><a href="#about">大場会について</a></li>
+                        <li><a href="#activities">活動内容</a></li>
+                        <li><a href="#events">イベント</a></li>
+                        <li><a href="#members">会員情報</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">リンク</h3>
+                    <ul class="footer-links">
+                        <li><a href="#join">入会案内</a></li>
+                        <li><a href="#contact">お問い合わせ</a></li>
+                        <li><a href="#">プライバシーポリシー</a></li>
+                        <li><a href="#">サイトマップ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 大場会 All Rights Reserved.
+            </div>
         </div>
-        <div class="social-icons">
-            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p class="copyright">&copy; 2025 大場会 All Rights Reserved.</p>
     </footer>
     
+    <!-- スクロールトップボタン -->
+    <div class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
     <script>
-        // ローディングアニメーション
+        // DOMが読み込まれたら実行
         document.addEventListener('DOMContentLoaded', function() {
-            const progress = document.querySelector('.progress');
-            const loader = document.querySelector('.loader');
+            // モバイルナビゲーション
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const navOverlay = document.querySelector('.nav-overlay');
+            const navLinks = document.querySelectorAll('.nav-links a');
             
-            let width = 0;
-            const interval = setInterval(function() {
-                width += 1;
-                progress.style.width = width + '%';
-                
-                if (width >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        loader.classList.add('hidden');
-                        initPage();
-                    }, 500);
-                }
-            }, 20);
-        });
-        
-        // 3D背景初期化
-        function initWebGLBackground() {
-            const canvas = document.getElementById('webgl-background');
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                alpha: true
+            navToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                navOverlay.classList.toggle('active');
+                document.body.classList.toggle('nav-open');
             });
             
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 30;
-            
-            // パーティクル生成
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 2000;
-            
-            const posArray = new Float32Array(particlesCount * 3);
-            const colorArray = new Float32Array(particlesCount * 3);
-            
-            for (let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 100;
-                
-                // オレンジから黄色のグラデーション用の色設定
-                if (i % 3 === 0) {
-                    colorArray[i] = 1; // R
-                    colorArray[i + 1] = Math.random() * 0.5 + 0.5; // G
-                    colorArray[i + 2] = 0; // B
-                }
-            }
-            
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-            
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.2,
-                transparent: true,
-                opacity: 0.6,
-                vertexColors: true,
-                blending: THREE.AdditiveBlending
-            });
-            
-            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-            
-            // アニメーション
-            function animate() {
-                requestAnimationFrame(animate);
-                
-                particlesMesh.rotation.x += 0.0005;
-                particlesMesh.rotation.y += 0.0003;
-                
-                renderer.render(scene, camera);
-            }
-            
-            animate();
-            
-            // リサイズイベント
-            window.addEventListener('resize', function() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-        
-        // カスタムカーソル
-        function initCustomCursor() {
-            const cursor = document.querySelector('.cursor');
-            const follower = document.querySelector('.cursor-follower');
-            
-            let mouseX = 0;
-            let mouseY = 0;
-            let cursorX = 0;
-            let cursorY = 0;
-            let followerX = 0;
-            let followerY = 0;
-            
-            gsap.to({}, 0.016, {
-                repeat: -1,
-                onRepeat: function() {
-                    cursorX += (mouseX - cursorX) / 5;
-                    cursorY += (mouseY - cursorY) / 5;
-                    
-                    followerX += (mouseX - followerX) / 8;
-                    followerY += (mouseY - followerY) / 8;
-                    
-                    gsap.set(cursor, {
-                        left: cursorX,
-                        top: cursorY
-                    });
-                    
-                    gsap.set(follower, {
-                        left: followerX,
-                        top: followerY
-                    });
-                }
-            });
-            
-            window.addEventListener('mousemove', function(e) {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-            
-            // リンクホバー時のカーソル変更
-            const links = document.querySelectorAll('a, button, .nav-trigger, .activities-nav-item');
-            links.forEach(link => {
-                link.addEventListener('mouseenter', function() {
-                    cursor.classList.add('expand');
-                    follower.classList.add('expand');
-                });
-                
-                link.addEventListener('mouseleave', function() {
-                    cursor.classList.remove('expand');
-                    follower.classList.remove('expand');
-                });
-            });
-        }
-        
-        // ナビゲーションの初期化
-        function initNavigation() {
-            const navTrigger = document.querySelector('.nav-trigger');
-            const navigation = document.querySelector('.navigation');
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navTrigger.addEventListener('click', function() {
-                navTrigger.classList.toggle('active');
-                navigation.classList.toggle('open');
+            navOverlay.addEventListener('click', function() {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.classList.remove('nav-open');
             });
             
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
-                    navTrigger.classList.remove('active');
-                    navigation.classList.remove('open');
+                    navToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    navOverlay.classList.remove('active');
+                    document.body.classList.remove('nav-open');
                 });
             });
-        }
-        
-        // ヒーローセクションのアニメーション
-        function animateHero() {
-            const heroTitle = document.querySelector('.hero-title');
-            const heroSubtitle = document.querySelector('.hero-subtitle');
-            const heroCta = document.querySelector('.hero-cta');
-            const scrollIndicator = document.querySelector('.scroll-indicator');
             
-            gsap.to(heroTitle, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                delay: 0.5,
-                ease: 'power3.out'
+            // スクロールヘッダー
+            const header = document.querySelector('.header');
+            let lastScrollTop = 0;
+            
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.classList.add('scrolled');
+                    
+                    if (scrollTop > lastScrollTop && scrollTop > 300) {
+                        header.classList.add('hidden');
+                    } else {
+                        header.classList.remove('hidden');
+                    }
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                
+                lastScrollTop = scrollTop;
             });
             
-            gsap.to(heroSubtitle, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                delay: 0.8,
-                ease: 'power3.out'
+            // カウンターアップアニメーション
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            function startCounter(element) {
+                const target = parseInt(element.getAttribute('data-count'));
+                const duration = 2000; // ミリ秒単位
+                const stepTime = 50; // 更新の頻度
+                const steps = duration / stepTime;
+                const increment = target / steps;
+                let current = 0;
+                
+                const timer = setInterval(function() {
+                    current += increment;
+                    element.textContent = Math.round(current);
+                    
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, stepTime);
+            }
+            
+            // スクロールアニメーション
+            const faders = document.querySelectorAll('.fade-in');
+            
+            const appearOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -100px 0px"
+            };
+            
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    
+                    entry.target.classList.add('visible');
+                    
+                    if (entry.target.classList.contains('stat-number')) {
+                        startCounter(entry.target);
+                    }
+                    
+                    appearOnScroll.unobserve(entry.target);
+                });
+            }, appearOptions);
+            
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
             });
             
-            gsap.to(heroCta, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                delay: 1.1,
-                ease: 'power3.out'
+            statNumbers.forEach(number => {
+                appearOnScroll.observe(number);
             });
             
-            gsap.to(scrollIndicator, {
-                opacity: 1,
-                duration: 1,
-                delay: 1.5,
-                ease: 'power3.out'
-            });
-        }
-        
-        // アクティビティスライダー
-        function initActivitiesSlider() {
-            const slides = document.querySelectorAll('.activities-slide');
-            const navItems = document.querySelectorAll('.activities-nav-item');
+            // アクティビティスライダー
+            const slides = document.querySelectorAll('.activity-slide');
+            const navItems = document.querySelectorAll('.activity-nav-item');
             let currentSlide = 0;
             
             function showSlide(index) {
@@ -1545,145 +1585,44 @@
                 });
             });
             
-            // 自動スライド
-            setInterval(function() {
+            // 自動スライドショー（オプション）
+            let slideInterval = setInterval(function() {
                 let nextSlide = (currentSlide + 1) % slides.length;
                 showSlide(nextSlide);
             }, 5000);
-        }
-        
-        // スクロールトリガーのアニメーション
-        function initScrollAnimations() {
-            gsap.registerPlugin(ScrollTrigger);
             
-            // アバウトセクションのアニメーション
-            const aboutItems = document.querySelectorAll('.about-item');
-            aboutItems.forEach((item, index) => {
-                gsap.to(item, {
-                    scrollTrigger: {
-                        trigger: item,
-                        start: 'top 80%'
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    delay: index * 0.2
+            // マウスオーバーで自動スライドを停止
+            const sliderContainer = document.querySelector('.activity-slider');
+            
+            sliderContainer.addEventListener('mouseenter', function() {
+                clearInterval(slideInterval);
+            });
+            
+            sliderContainer.addEventListener('mouseleave', function() {
+                slideInterval = setInterval(function() {
+                    let nextSlide = (currentSlide + 1) % slides.length;
+                    showSlide(nextSlide);
+                }, 5000);
+            });
+            
+            // スクロールトップボタン
+            const scrollTopBtn = document.querySelector('.scroll-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+            
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
             });
-            
-            // 統計数字のカウントアップ
-            const statItems = document.querySelectorAll('.stat-item');
-            statItems.forEach((item, index) => {
-                const numberElement = item.querySelector('.stat-number');
-                const targetNumber = parseInt(numberElement.getAttribute('data-count'));
-                
-                gsap.to(item, {
-                    scrollTrigger: {
-                        trigger: item,
-                        start: 'top 80%'
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    delay: index * 0.2
-                });
-                
-                gsap.to(numberElement, {
-                    scrollTrigger: {
-                        trigger: item,
-                        start: 'top 80%'
-                    },
-                    innerText: targetNumber,
-                    duration: 2,
-                    snap: { innerText: 1 },
-                    delay: 0.5 + index * 0.2
-                });
-            });
-            
-            // イベントアイテム
-            const eventItems = document.querySelectorAll('.event-item');
-            eventItems.forEach((item, index) => {
-                gsap.to(item, {
-                    scrollTrigger: {
-                        trigger: item,
-                        start: 'top 80%'
-                    },
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.8,
-                    delay: index * 0.2
-                });
-            });
-            
-            // メンバーカード
-            const memberCards = document.querySelectorAll('.member-card');
-            memberCards.forEach((card, index) => {
-                gsap.to(card, {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 80%'
-                    },
-                    opacity: 1,
-                    rotateY: 0,
-                    duration: 0.8,
-                    delay: index * 0.15
-                });
-            });
-            
-            // 入会セクション
-            gsap.to('.join-info', {
-                scrollTrigger: {
-                    trigger: '.join-info',
-                    start: 'top 80%'
-                },
-                opacity: 1,
-                x: 0,
-                duration: 0.8
-            });
-            
-            gsap.to('.join-form', {
-                scrollTrigger: {
-                    trigger: '.join-form',
-                    start: 'top 80%'
-                },
-                opacity: 1,
-                x: 0,
-                duration: 0.8,
-                delay: 0.2
-            });
-            
-            // コンタクトセクション
-            gsap.to('.contact-info', {
-                scrollTrigger: {
-                    trigger: '.contact-info',
-                    start: 'top 80%'
-                },
-                opacity: 1,
-                y: 0,
-                duration: 0.8
-            });
-            
-            gsap.to('.contact-map', {
-                scrollTrigger: {
-                    trigger: '.contact-map',
-                    start: 'top 80%'
-                },
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                delay: 0.2
-            });
-        }
-        
-        // ページの初期化
-        function initPage() {
-            initWebGLBackground();
-            initCustomCursor();
-            initNavigation();
-            animateHero();
-            initActivitiesSlider();
-            initScrollAnimations();
-        }
+        });
     </script>
 </body>
 </html>
